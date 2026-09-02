@@ -179,23 +179,23 @@
   </style>
 
   <script>
-  function updateRiskExplanation(z, r){
+ function updateRiskExplanation(z, r){
   const contributions = [
     {
       label: 'Rainfall',
-      value: r.rN * WEIGHTS.rain * 100
+      value: r.rN * 100
     },
-    {
+     {
       label: 'Soil saturation',
-      value: r.mN * WEIGHTS.moist * 100
+      value: r.mN * 100
     },
     {
       label: 'Ground vibration',
-      value: r.vN * WEIGHTS.vib * 100
+      value: r.vN * 100
     },
     {
       label: 'Slope angle',
-      value: r.sN * WEIGHTS.slope * 100
+      value: r.sN * 100
     }
   ];
 
@@ -211,7 +211,7 @@
     contributions.map(item => `
       <div class="risk-contribution">
         <span>${item.label}</span>
-        <b>${item.value.toFixed(1)} pts</b>
+       <b>${item.value.toFixed(0)}%</b>
       </div>
     `).join('');
 
@@ -694,12 +694,16 @@
       <div class="modal-sub">Community reports help validate sensor data and speed up response.</div>
 
       <div id="reportFormWrap">
-        <div class="form-group">
-          <label>Upload Photo (optional)</label>
-          <div class="photo-drop" id="photoDrop">Click to select a photo — preview only, not uploaded to a server in this demo</div>
-          <input type="file" id="photoInput" accept="image/*" style="display:none;">
-          <img class="photo-preview" id="photoPreview">
-        </div>
+      <div class="form-group">
+  <label>Upload Photo (optional)</label>
+  <div class="photo-drop" id="photoDrop">Click to select a photo — preview only, not uploaded to a server in this demo</div>
+  <input type="file" id="photoInput" accept="image/*" style="display:none;">
+  <img class="photo-preview" id="photoPreview">
+</div>
+<div class="form-group">
+  <label>Contact Number</label>
+  <input type="tel" id="incidentPhone" placeholder="+91 98xxxxxxx">
+</div>
         <div class="form-group">
           <label>Select Incident Type</label>
           <select id="incidentType">
@@ -29954,14 +29958,14 @@ photoInput.addEventListener('change', () => {
   };
   reader.readAsDataURL(file);
 });
-
 document.getElementById('submitReportBtn').addEventListener('click', () => {
   const type = document.getElementById('incidentType').value;
   const loc = document.getElementById('incidentLocation').value || 'Unspecified location';
   const desc = document.getElementById('incidentDesc').value;
+  const phone = document.getElementById('incidentPhone').value || 'Not provided';
   const time = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
 
-  communityReports.unshift({ type, loc, desc, time, hasPhoto: !!photoInput.files[0] });
+  communityReports.unshift({ type, loc, desc, phone, time, hasPhoto: !!photoInput.files[0] });
   communityReports = communityReports.slice(0, 15);
   renderCommunityReports();
 
@@ -29971,6 +29975,7 @@ document.getElementById('submitReportBtn').addEventListener('click', () => {
   document.getElementById('reportFormWrap').style.display = 'none';
   document.getElementById('reportConfirm').classList.add('show');
   document.getElementById('incidentDesc').value = '';
+  document.getElementById('incidentPhone').value = '';
   photoPreview.style.display = 'none';
   photoDrop.textContent = 'Click to select a photo — preview only, not uploaded to a server in this demo';
   photoInput.value = '';
